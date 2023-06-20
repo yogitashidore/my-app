@@ -1,15 +1,36 @@
 pipeline {
-    agent any
-    tools {
-        maven '3.9.2'
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        // Checkout your source code from version control
+        heckout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '05c0f55a-088a-432f-8152-3472b0273378', url: 'https://github.com/yogitashidore/mymavenproject.git']])
+      }
     }
-    stages{
-        stage('Build Maven') {
-            steps {
-               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '05c0f55a-088a-432f-8152-3472b0273378', url: 'https://github.com/yogitashidore/mymavenproject.git']])
-        
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
-            }
+    
+    stage('Build') {
+      steps {
+        // Build your application
+        sh 'mvn clean package' // Or any other build command
+      }
+    }
+    
+    stage('Docker Build') {
+      steps {
+        // Build the Docker image
+        sh 'docker build -t your-image-name .'
+      }
+    }
+    
+    stage('Docker Push') {
+      steps {
+        // Push the Docker image to a container registry
+        withCredentials([string(credentialsId: 'your-credentials-id', variable: 'DOCKER_REGISTRY_PASSWORD')]) {
+          sh 'docker login -u your-username -p $DOCKER_REGISTRY_PASSWORD'
+          sh 'docker push your-image-name'
         }
+      }
     }
+  }
 }
