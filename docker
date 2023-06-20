@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    tools {
+        maven '3.9.2'
+    }
+    stages{
+        stage('Build Maven') {
+            steps {
+               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: '05c0f55a-088a-432f-8152-3472b0273378', url: 'https://github.com/yogitashidore/mymavenproject.git']])
+        
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+    }
+}
