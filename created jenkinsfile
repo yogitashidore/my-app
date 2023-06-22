@@ -1,11 +1,11 @@
 pipeline{
-agent name
-stages{
-stage{
-agent any
-steps{
+ agent name
+  stages{
+   stage('test'{
+     agent any
+      steps{
           sh 'echo this is a test jenkinsfilepipeline"
-}
-}
-}
+        }
+    }
+  }
 }
