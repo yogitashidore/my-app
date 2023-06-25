@@ -1,0 +1,11 @@
+pipeline{
+ agent name
+  stages{
+   stage{
+    agent any
+     steps{
+      sh 'echo this is a test jenkinsfile pipeline"
+     }
+   }
+  }
+}
